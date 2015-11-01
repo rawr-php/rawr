@@ -10,6 +10,28 @@ define("rawr_array", "array");
 define("rawr_callable", "callable");
 
 /**
+ * Casts a primitive value to an object value.
+ * @author Marcelo Camargo
+ * @param mixed $op
+ * @param mixed string $type
+ * @return mixed
+ */
+function rawr_from_primitive($op, $type)
+{
+  if (($op_type = rawr_get_primitive_type($op)) === "object") {
+    return $op;
+  }
+
+  switch ($op_type) {
+    case rawr_boolean:
+      return new \Rawr\DataType\Bool($op);
+    default:
+      throw new Exception("[rawr-core] Cannot cast primitive of type"
+        . "[{$op_type}] to object-type [{$type}]");
+  }
+}
+
+/**
  * Reduces a value to a primitive and applies type checking.
  * @author Marcelo Camargo
  * @param mixed $op
@@ -68,6 +90,10 @@ function rawr_get_primitive_type($op)
 {
   if (is_bool($op)) {
     return "boolean";
+  } else if (is_callable($op)) {
+    // Ensure this verification occurs before is_object and is_string,
+    // because closures are also objects and strings may be callable
+    return "callable";
   } else if (is_int($op)) {
     return "integer";
   } else if (is_double($op)) {
@@ -78,9 +104,21 @@ function rawr_get_primitive_type($op)
     return "array";
   } else if (is_object($op)) {
     return "object";
-  } else if (is_callable($op)) {
-    return "callable";
   } else if (is_null($op)) {
     return "null";
+  }
+}
+
+/**
+ * Default arguments to hold compatibility with previous PHP versions.
+ * @author Marcelo Camargo
+ * @param mixed &$var
+ * @param mixed $def
+ * @return void
+ */
+function rawr_set_default_value(&$var, $def)
+{
+  if (is_null($var)) {
+    $var = $def;
   }
 }
