@@ -12,6 +12,8 @@ $and = new Action(function($x, $y) {
   return $x && $y;
 });
 
-$and(true, true)->ifTrue(new Action(function() {
+$action = new Action(function() {
   echo "Sim, amiguinho!", PHP_EOL;
-}));
+});
+
+$and(true, true);
