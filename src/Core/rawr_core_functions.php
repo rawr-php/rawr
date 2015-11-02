@@ -8,6 +8,7 @@ define("rawr_resource", "resource");
 define("rawr_string", "string");
 define("rawr_array", "array");
 define("rawr_callable", "callable");
+define("rawr_null", "null");
 
 /**
  * Casts a primitive value to an object value.
@@ -18,7 +19,7 @@ define("rawr_callable", "callable");
  */
 function rawr_from_primitive($op, $type)
 {
-  if (($op_type = rawr_get_primitive_type($op)) === "object") {
+  if (($op_type = rawr_get_primitive_type($op)) === rawr_object) {
     return $op;
   }
 
@@ -26,7 +27,7 @@ function rawr_from_primitive($op, $type)
     case rawr_boolean:
       return new \Rawr\DataType\Bool($op);
     default:
-      throw new Exception("[rawr-core] Cannot cast primitive of type"
+      throw new Exception("[rawr-core] Cannot cast primitive of type "
         . "[{$op_type}] to object-type [{$type}]");
   }
 }
@@ -43,9 +44,10 @@ function rawr_reduce($op, $type)
   $op_type = rawr_get_primitive_type($op);
 
   switch ($op_type) {
-    case "object":
+    case rawr_object:
+    case rawr_callable:
       // When we want any object
-      if ($type === "object") {
+      if ($type === rawr_object) {
         return $op;
       }
 
@@ -55,11 +57,12 @@ function rawr_reduce($op, $type)
         $unwrapped_value =  $op->value();
         $op_class = get_class($op);
 
-        // Verify if we can cast it to a primitive value with type assertion
+        // Verify if we can cast it to a primitive value *with type assertion*
         switch ($op_class) {
           case $class_prefix . "Bool" && $type === rawr_boolean:
-            return $unwrapped_value;
-          /* Add more here */
+          case $class_prefix . "Action" && $type === rawr_callable:
+            break;
+          /* Add more here. Please, remember this. */
           default:
             throw new Exception("[rawr-core] Cannot cast [{$op_class}] to primitive [{$type}]");
         }
@@ -89,23 +92,23 @@ function rawr_reduce($op, $type)
 function rawr_get_primitive_type($op)
 {
   if (is_bool($op)) {
-    return "boolean";
+    return rawr_boolean;
   } else if (is_callable($op)) {
     // Ensure this verification occurs before is_object and is_string,
     // because closures are also objects and strings may be callable
-    return "callable";
+    return rawr_callable;
   } else if (is_int($op)) {
-    return "integer";
+    return rawr_integer;
   } else if (is_double($op)) {
-    return "double";
+    return rawr_double;
   } else if (is_string($op)) {
-    return "string";
+    return rawr_string;
   } else if (is_array($op)) {
-    return "array";
+    return rawr_array;
   } else if (is_object($op)) {
-    return "object";
+    return rawr_object;
   } else if (is_null($op)) {
-    return "null";
+    return rawr_null;
   }
 }
 
