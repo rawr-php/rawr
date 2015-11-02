@@ -23,12 +23,17 @@ function rawr_from_primitive($op, $type)
     return $op;
   }
 
-  switch ($op_type) {
+  if ($op_type !== $type) {
+    throw new Exception("[rawr-core] Cannot cast primitive of type [{$op_type}] to object-type [{$type}]");
+  }
+
+  switch ($type) {
     case rawr_boolean:
       return new \Rawr\DataType\Bool($op);
+    case rawr_callable:
+      return new \Rawr\DataType\Action($op);
     default:
-      throw new Exception("[rawr-core] Cannot cast primitive of type "
-        . "[{$op_type}] to object-type [{$type}]");
+      return new \Exception("[rawr-core] Not implemented");
   }
 }
 

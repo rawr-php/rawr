@@ -33,7 +33,7 @@ class Action extends BaseType
 
   public function __invoke()
   {
-    return rawr_from_primitive(call_user_func_array($this->value,
-      func_get_args()), rawr_get_primitive_type($this->value));
+    $call_result = call_user_func_array($this->value, func_get_args());
+    return rawr_from_primitive($call_result, rawr_get_primitive_type($call_result));
   }
 }
