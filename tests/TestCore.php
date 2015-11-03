@@ -21,26 +21,21 @@ class TestCore extends PHPUnit_Framework_TestCase
   public function testGetPrimitiveType()
   {
     $values = [
-      "bool"     => true,
-      "callable" => function() {},
-      "integer"  => 7,
-      "double"   => 7.432,
-      "string"   => "string",
-      "array"    => [],
-      "object"   => new stdClass,
-      "null"     => null
+      rawr_boolean  => true,
+      rawr_callable => function() {},
+      rawr_integer  => 7,
+      rawr_double   => 7.432,
+      rawr_string   => "string",
+      rawr_array    => [],
+      rawr_object   => new stdClass,
+      rawr_null     => null
     ];
 
     $this->values = &$values;
 
-    $this->assertEquals(rawr_get_primitive_type($values["bool"]), rawr_boolean);
-    $this->assertEquals(rawr_get_primitive_type($values["callable"]), rawr_callable);
-    $this->assertEquals(rawr_get_primitive_type($values["integer"]), rawr_integer);
-    $this->assertEquals(rawr_get_primitive_type($values["double"]), rawr_double);
-    $this->assertEquals(rawr_get_primitive_type($values["string"]), rawr_string);
-    $this->assertEquals(rawr_get_primitive_type($values["array"]), rawr_array);
-    $this->assertEquals(rawr_get_primitive_type($values["object"]), rawr_object);
-    $this->assertEquals(rawr_get_primitive_type($values["null"]), rawr_null);
+    foreach ($values as $type => $value) {
+      $this->assertEquals(rawr_get_primitive_type($value), $type);
+    }
   }
 
   /**
