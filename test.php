@@ -8,12 +8,10 @@ require_once 'src/DataType/Bool.php';
 use \Rawr\DataType\Action;
 use \Rawr\DataType\Bool;
 
-$and = new Action(function($x, $y) {
-  return $x && $y;
-});
 
-$action = new Action(function() {
-  echo "Sim, amiguinho!", PHP_EOL;
-});
 
-$and(true, true);
+$boolean_id = new Action(function($x, $y) {
+  return $x && $y ;
+}, true);
+
+var_dump($boolean_id(true, false));
