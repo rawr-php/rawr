@@ -3,7 +3,7 @@
 function import($files)
 {
   foreach ($files as $file) {
-    require_once './src/' . $file . ".php";
+    require_once "./src/{$file}.php";
   }
 }
 

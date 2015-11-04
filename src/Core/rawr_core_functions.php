@@ -32,8 +32,10 @@ function rawr_from_primitive($op, $type)
       return new \Rawr\DataType\Bool($op);
     case rawr_callable:
       return new \Rawr\DataType\Action($op);
+    case rawr_integer:
+      return new \Rawr\DataType\Int($op);
     default:
-      return new \Exception("[rawr-core] Not implemented");
+      throw new \Exception("[rawr-core] Not implemented for [{$type}]");
   }
 }
 
