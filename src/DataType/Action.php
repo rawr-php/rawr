@@ -3,7 +3,6 @@
 namespace Rawr\DataType;
 use \ReflectionFunction;
 
-
 /**
  * @package Rawr
  * @version 0.9.0
@@ -12,7 +11,7 @@ class Action extends BaseType
 {
   private $reflection;
   private $args = [];
-  private $length = 0;
+  public $length = 0;
 
   public function __construct($value = NULL)
   {
@@ -63,7 +62,8 @@ class Action extends BaseType
     }
 
     $action = new Action($this->value);
-    $action->setArgs($all_params);
+
+    call_user_func_array([$action, 'setArgs'], $all_params);
     return $action;
   }
 }
