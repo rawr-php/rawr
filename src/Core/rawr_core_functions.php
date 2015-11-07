@@ -76,6 +76,10 @@ function rawr_reduce($op, $type)
 
         return $unwrapped_value;
       } else {
+        if (is_callable($op) && $type === rawr_callable) {
+          return $op;
+        }
+
         throw new Exception("[rawr-core] Trying to extract value from a non-rawr type");
       }
     case "null":
