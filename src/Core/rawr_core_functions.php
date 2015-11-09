@@ -53,6 +53,7 @@ function rawr_reduce($op, $type)
   switch ($op_type) {
     case rawr_object:
     case rawr_callable:
+    case rawr_integer:
       // When we want any object
       if ($type === rawr_object) {
         return $op;
@@ -68,8 +69,8 @@ function rawr_reduce($op, $type)
         switch ($op_class) {
           case $class_prefix . "Bool" && $type === rawr_boolean:
           case $class_prefix . "Action" && $type === rawr_callable:
+          case $class_prefix . "Int" && $type === rawr_integer:
             break;
-          /* Add more here. Please, remember this. */
           default:
             throw new Exception("[rawr-core] Cannot cast [{$op_class}] to primitive [{$type}]");
         }
@@ -82,6 +83,7 @@ function rawr_reduce($op, $type)
 
         throw new Exception("[rawr-core] Trying to extract value from a non-rawr type");
       }
+      break;
     case "null":
       throw new Exception("[rawr-core] Unable to reduce null value");
     default:

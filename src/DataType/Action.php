@@ -49,7 +49,7 @@ class Action extends BaseType
 
     $this->value = $value;
     $this->reflection = new ReflectionFunction($this->value);
-    $this->length = count($this->reflection->getParameters());
+    $this->length = $this->reflection->getNumberOfRequiredParameters();
 
     $this->args = $arguments;
     $this->remaining_size = $this->length - sizeof($arguments);
@@ -135,7 +135,7 @@ class Action extends BaseType
    */
   public function getRemainingParameters()
   {
-    return /* new Int */($this->remaining_size);
+    return new Int($this->remaining_size);
   }
 
   /**
@@ -153,13 +153,13 @@ class Action extends BaseType
       throw new \Exception("[rawr-core] Not a function");
     }
 
-    $size_l = $this->getRemainingParameters();
+    $size_l = rawr_reduce($this->getRemainingParameters(), rawr_integer);
     $size_r = NULL;
     // Get size of the received function
     if ($right instanceof \Rawr\DataType\Action) {
-      $size_r = $right->getRemainingParameters();
+      $size_r = rawr_reduce($right->getRemainingParameters(), rawr_integer);
     } else {
-      $size_r = sizeof((new ReflectionFunction($right))->getParameters());
+      $size_r = (new ReflectionFunction($right))->getNumberOfRequiredParameters();
     }
 
     if ($size_l > $size_r) {
