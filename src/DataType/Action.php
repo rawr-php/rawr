@@ -131,11 +131,11 @@ class Action extends BaseType
   /**
    * Returns the number of remaining parameters for this action.
    * @author Marcelo Camargo
-   * @return Int
+   * @return rawr<Int>
    */
   public function getRemainingParameters()
   {
-    return new Int($this->remaining_size);
+    return rawr_from_primitive($this->remaining_size, rawr_integer);
   }
 
   /**
@@ -175,5 +175,56 @@ class Action extends BaseType
       return call_user_func_array($left, [call_user_func_array($right, $arguments)]);
     });
   }
+
+  /**
+   * Returns the documentation comment above the function.
+   * @author Marcelo Camargo
+   * @return rawr<String>
+   */
+  public function getDocComment()
+  {
+    return rawr_from_primitive($this->reflection->getDocComment(), rawr_string);
+  }
+
+  /**
+   * The line number where the function ends.
+   * @author Marcelo Camargo
+   * @return rawr<Int>
+   */
+  public function getEndLine()
+  {
+    return rawr_from_primitive($this->reflection->getEndLine(), rawr_integer);
+  }
+
+  /**
+   * Returns informations about the extension of a function.
+   * @author Marcelo Camargo
+   * @return ReflectionExtension
+   */
+  public function getExtension()
+  {
+    return $this->reflection->getExtension();
+  }
+
+  /**
+   * Returns the name of the function's extension.
+   * @author Marcelo Camargo
+   * @return rawr<String>
+   */
+  public function getExtensionName()
+  {
+    return rawr_from_primitive($this->reflection->getExtensionName(), rawr_string);
+  }
+
+  /**
+   * Gets the filename from a user-defined function.
+   * @author Marcelo Camargo
+   * @return rawr<String>
+   */
+  public function getFileName()
+  {
+    return rawr_from_primitive($this->reflection->getFileName(), rawr_string);
+  }
 }
+
 
